@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NDVI Mapper — GreenSight</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <div class="logo"><span class="mark"></span>GreenSight</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/features">Features</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <a href="/demo" class="btn btn-primary">Live demo</a>
+  </div>
+</nav>
+
+<header class="hero" style="padding: 70px 0 40px;">
+  <div class="hero-bg">
+    <div class="glow-blob green"></div>
+    <div class="glow-blob gold"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-trees"></div>
+  </div>
+  <div class="wrap" style="display:block;">
+    <div class="reveal">
+      <div class="eyebrow">Live tool · Vegetation index</div>
+      <h1 style="font-size: clamp(28px,4vw,42px); margin: 16px 0 14px;">NDVI Mapper</h1>
+      <p class="lede">Upload a field photo and we'll compute a real green-vs-red vegetation index per pixel, then paint it using the same brown-to-green scale real NDVI maps use. (Honest note: without an infrared camera this is an approximation, not true satellite NDVI.)</p>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+    <div class="contact-grid">
+
+      <form class="reveal" method="POST" action="/tools/ndvi-mapper" enctype="multipart/form-data">
+        <div class="field">
+          <label for="field_image">Upload a field photo</label>
+          <input type="file" id="field_image" name="field_image" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate heatmap →</button>
+      </form>
+
+      <div class="reveal">
+        {% if stats %}
+        <div class="card">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px;">
+            <div>
+              <div class="eyebrow" style="font-size:10.5px;">Original</div>
+              <img src="{{ image_url }}" alt="Original field photo" style="width:100%; border-radius:8px; margin-top:6px;">
+            </div>
+            <div>
+              <div class="eyebrow" style="font-size:10.5px;">NDVI heatmap</div>
+              <img src="{{ heatmap_url }}" alt="Generated NDVI heatmap" style="width:100%; border-radius:8px; margin-top:6px;">
+            </div>
+          </div>
+          <div style="display:flex; gap:16px; font-family:var(--font-mono); font-size:13px; color:var(--muted); flex-wrap:wrap;">
+            <span>Index: <strong style="color:var(--fg);">{{ stats.avg_index }}</strong></span>
+            <span>Healthy: <strong style="color:var(--accent);">{{ stats.healthy_pct }}%</strong></span>
+            <span>Stressed: <strong style="color:var(--gold);">{{ stats.stressed_pct }}%</strong></span>
+          </div>
+        </div>
+        {% else %}
+        <div class="card" style="text-align:center; padding:44px 28px; color:var(--muted);">
+          Upload a field photo on the left — the heatmap appears here.
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-bottom">
+    <span>© 2026 GreenSight</span>
+    <span>Visible-light approximation of NDVI</span>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

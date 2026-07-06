@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GreenSight</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <div class="logo"><span class="mark"></span>GreenSight</div>
+    <div class="nav-links">
+      <a href="/" class="active">Home</a>
+      <a href="/features">Features</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/demo">Demo</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <a href="/demo" class="btn btn-primary">Live demo</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg">
+    <div class="glow-blob green"></div>
+    <div class="glow-blob gold"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-trees"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="reveal">
+      <div class="badge-live">
+        <span class="ping-dot"></span>
+        Live field monitoring
+      </div>
+      <h1>See crop stress<br>before it becomes a <span class="text-gradient">crisis.</span></h1>
+      <p class="lede">GreenSight flies multispectral drones over your fields, reads plant health the way a scientist reads a lab result, and tells you exactly where to act — days before it's visible to the eye.</p>
+      <div class="hero-actions">
+        <a href="/demo" class="btn btn-primary">Try the live demo →</a>
+        <a href="/features" class="btn btn-outline">See how it works</a>
+      </div>
+    </div>
+
+    <div class="orbit-wrap reveal">
+      <div class="orbit-ring r1"></div>
+      <div class="orbit-ring r2"></div>
+      <div class="orbit-ring r3"></div>
+      <div class="orbit-core">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+      </div>
+      <div class="stat-float s1"><strong>7–10 days</strong>earlier detection</div>
+      <div class="stat-float s2"><strong>90 min</strong>per 100 acres</div>
+      <div class="stat-float s3"><strong>40–50%</strong>less pesticide</div>
+      <div class="stat-float s4"><strong>92%</strong>model confidence</div>
+    </div>
+  </div>
+</header>
+
+<section class="section surface">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">What's inside</div>
+      <h2>Built to be the whole system, not just the drone.</h2>
+      <p>Six components working together — from the camera in the air to the alert on your phone.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card reveal">
+        <div class="icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        </div>
+        <h3>NDVI health mapping</h3>
+        <p>Near-infrared imaging turns invisible plant stress into a colour-coded map of the whole field.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        </div>
+        <h3>AI pest &amp; disease detection</h3>
+        <p>Trained vision models flag infestations early and route spraying only to the affected patch.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 15l4-6 3 3 5-8"/></svg>
+        </div>
+        <h3>Yield prediction</h3>
+        <p>Automated plant counting converts into a harvest estimate — weeks before harvest day.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:44px;" class="reveal">
+      <a href="/features" class="btn btn-outline">View all features →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-bottom">
+    <span>© 2026 GreenSight</span>
+    <span>Built for pilots &amp; partners</span>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

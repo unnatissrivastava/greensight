@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin — Submissions</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+  .admin-table{ width:100%; border-collapse: collapse; margin-top: 24px; }
+  .admin-table th, .admin-table td{
+    text-align:left; padding: 12px 14px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-table th{ font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+  .admin-table td{ color: var(--fg); }
+  .admin-table tr:hover td{ background: rgba(58,120,46,0.05); }
+  .empty-state{ color: var(--muted); padding: 40px 0; text-align:center; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <div class="logo"><span class="mark"></span>GreenSight</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/features">Features</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <a href="/" class="btn btn-outline">← Back to site</a>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="wrap">
+    <div class="eyebrow">Admin</div>
+    <h1 style="font-size: clamp(26px,3.5vw,38px); margin: 14px 0;">Contact form submissions</h1>
+    <p style="color: var(--muted);">{{ submissions|length }} total.</p>
+
+    {% if submissions %}
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Message</th>
+          <th>Received</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in submissions %}
+        <tr>
+          <td>{{ s.id }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.message }}</td>
+          <td style="font-family: var(--font-mono); font-size:12.5px; color: var(--muted);">{{ s.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">No submissions yet — try the contact form.</div>
+    {% endif %}
+  </div>
+</section>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

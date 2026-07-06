@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Thanks — GreenSight</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <div class="logo"><span class="mark"></span>GreenSight</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/features">Features</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <a href="/contact" class="btn btn-primary">Book a demo</a>
+  </div>
+</nav>
+
+<header class="hero" style="min-height: 70vh; display:flex; align-items:center;">
+  <div class="hero-bg">
+    <div class="glow-blob green"></div>
+    <div class="glow-blob gold"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-trees"></div>
+  </div>
+  <div class="wrap" style="display:block;">
+    <div class="thanks-box reveal">
+      <div class="thanks-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <div class="eyebrow" style="justify-content:center;">Message received</div>
+      <h1 style="font-size: clamp(28px,4vw,42px); margin: 16px 0 14px;">Thank you — we'll be in touch soon.</h1>
+      <p class="lede" style="margin: 0 auto 30px;">Someone from the GreenSight team will reach out within one business day to set up your demo flight.</p>
+      <a href="/" class="btn btn-outline">← Back to home</a>
+    </div>
+
+    <div class="farm-scene reveal">
+      <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="120" cy="70" r="55" fill="#6B8F4E" opacity="0.12"/>
+
+        <g class="scene-tree t1" transform="translate(70,120)">
+          <rect x="26" y="70" width="8" height="45" fill="#1E4517"/>
+          <circle cx="30" cy="45" r="28" fill="#3A782E" opacity="0.55"/>
+          <circle cx="12" cy="58" r="20" fill="#3A782E" opacity="0.45"/>
+          <circle cx="48" cy="58" r="20" fill="#3A782E" opacity="0.45"/>
+        </g>
+
+        <g class="scene-tree t2" transform="translate(660,100)">
+          <rect x="26" y="80" width="9" height="55" fill="#1E4517"/>
+          <circle cx="30" cy="50" r="32" fill="#3A782E" opacity="0.5"/>
+          <circle cx="10" cy="65" r="22" fill="#3A782E" opacity="0.4"/>
+          <circle cx="52" cy="65" r="22" fill="#3A782E" opacity="0.4"/>
+        </g>
+
+        <g class="scene-tree t3" transform="translate(730,130)">
+          <rect x="18" y="60" width="7" height="38" fill="#1E4517"/>
+          <circle cx="21" cy="38" r="22" fill="#3A782E" opacity="0.5"/>
+          <circle cx="8" cy="48" r="14" fill="#3A782E" opacity="0.4"/>
+          <circle cx="34" cy="48" r="14" fill="#3A782E" opacity="0.4"/>
+        </g>
+
+        <g opacity="0.35">
+          <polygon points="600,190 640,155 680,190" fill="#1E4517"/>
+          <rect x="608" y="190" width="64" height="45" fill="#0B140D" stroke="#1E4517" stroke-width="2"/>
+          <rect x="630" y="210" width="16" height="25" fill="#1E4517"/>
+        </g>
+
+        <path d="M0,265 Q200,258 400,265 T800,265" stroke="#1E4517" stroke-width="2" fill="none" opacity="0.5"/>
+        <path d="M0,278 Q200,271 400,278 T800,278" stroke="#1E4517" stroke-width="2" fill="none" opacity="0.4"/>
+        <path d="M0,291 Q200,284 400,291 T800,291" stroke="#1E4517" stroke-width="2" fill="none" opacity="0.3"/>
+        <rect x="0" y="292" width="800" height="8" fill="#0B140D"/>
+
+        <g class="farmer-body">
+          <circle cx="400" cy="150" r="11" fill="#6B8F4E"/>
+          <line x1="400" y1="161" x2="400" y2="210" stroke="#6B8F4E" stroke-width="7" stroke-linecap="round"/>
+          <line x1="400" y1="210" x2="388" y2="255" stroke="#6B8F4E" stroke-width="6" stroke-linecap="round"/>
+          <line x1="400" y1="210" x2="412" y2="255" stroke="#6B8F4E" stroke-width="6" stroke-linecap="round"/>
+          <line x1="400" y1="178" x2="382" y2="198" stroke="#6B8F4E" stroke-width="6" stroke-linecap="round"/>
+
+          <g class="farmer-arm">
+            <line x1="400" y1="178" x2="428" y2="200" stroke="#6B8F4E" stroke-width="6" stroke-linecap="round"/>
+            <line x1="428" y1="200" x2="440" y2="258" stroke="#4a3423" stroke-width="4" stroke-linecap="round"/>
+            <line x1="430" y1="258" x2="452" y2="256" stroke="#4a3423" stroke-width="6" stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
