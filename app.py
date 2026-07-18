@@ -34,40 +34,44 @@ def analyze_leaf_image(image_path):
     """
     Real pixel analysis (not a neural net, but genuine computation):
     classifies each pixel as healthy-green, stressed-yellow/brown, or other,
-    based on actual RGB values, then reports the real ratios found.
+    based on actual RGB values. Ratios are computed against plant pixels
+    only (excluding background/soil), so results aren't diluted by
+    whatever's behind the leaf.
     """
     img = Image.open(image_path).convert("RGB").resize((300, 300))
     arr = np.array(img).astype(int)
     r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
 
-    total_pixels = arr.shape[0] * arr.shape[1]
-
     healthy_mask = (g > r) & (g > b) & (g > 60)
-    stressed_mask = (r > 100) & (g > 60) & (b < 100) & (r >= g)
-    other_mask = ~(healthy_mask | stressed_mask)
+    stressed_mask = (r > 90) & (r >= g) & (b < 120)
 
-    healthy_pct = float(healthy_mask.sum()) / total_pixels * 100
-    stressed_pct = float(stressed_mask.sum()) / total_pixels * 100
-    other_pct = float(other_mask.sum()) / total_pixels * 100
+    plant_mask = healthy_mask | stressed_mask
+    plant_pixel_count = int(plant_mask.sum())
 
-    if stressed_pct > 30:
+    if plant_pixel_count == 0:
+        # Fall back to whole image if we couldn't isolate any plant matter
+        plant_pixel_count = arr.shape[0] * arr.shape[1]
+
+    healthy_pct = float(healthy_mask.sum()) / plant_pixel_count * 100
+    stressed_pct = float(stressed_mask.sum()) / plant_pixel_count * 100
+
+    if stressed_pct > 15:
         verdict = "High stress detected"
-        confidence = round(min(95, 60 + stressed_pct / 2), 1)
-    elif stressed_pct > 12:
+        confidence = round(min(96, 65 + stressed_pct / 3), 1)
+    elif stressed_pct > 0.5:
         verdict = "Mild stress detected"
-        confidence = round(min(90, 55 + stressed_pct), 1)
+        confidence = round(min(90, 55 + stressed_pct * 2), 1)
     else:
         verdict = "Healthy"
-        confidence = round(min(97, 70 + healthy_pct / 3), 1)
+        confidence = round(min(97, 70 + healthy_pct / 4), 1)
 
     return {
         "verdict": verdict,
         "confidence": confidence,
         "healthy_pct": round(healthy_pct, 1),
         "stressed_pct": round(stressed_pct, 1),
-        "other_pct": round(other_pct, 1),
+        "other_pct": round(max(0, 100 - healthy_pct - stressed_pct), 1),
     }
-
 
 @app.route("/")
 def home():
