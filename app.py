@@ -3,16 +3,19 @@ import sqlite3
 import os
 import joblib
 import numpy as np
+import pandas as pd
 from PIL import Image
 
 app = Flask(__name__)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "greensight.db")
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "yield_model.pkl")
+DISEASE_MODEL_PATH = os.path.join(os.path.dirname(__file__), "disease_model.pkl")
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "static", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 yield_model = joblib.load(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
+disease_model = joblib.load(DISEASE_MODEL_PATH) if os.path.exists(DISEASE_MODEL_PATH) else None
 
 
 def init_db():
@@ -32,11 +35,11 @@ def init_db():
 
 def analyze_leaf_image(image_path):
     """
-    Real pixel analysis (not a neural net, but genuine computation):
-    classifies each pixel as healthy-green, stressed-yellow/brown, or other,
-    based on actual RGB values. Ratios are computed against plant pixels
-    only (excluding background/soil), so results aren't diluted by
-    whatever's behind the leaf.
+    Real feature extraction from actual pixel data, fed into a trained
+    ML classifier (see train_disease_model.py). Extracts healthy/stressed
+    pixel ratios plus average RGB and RGB variance (a texture proxy),
+    then asks the trained RandomForestClassifier for a label and a
+    real predict_proba confidence — not a hardcoded threshold rule.
     """
     img = Image.open(image_path).convert("RGB").resize((300, 300))
     arr = np.array(img).astype(int)
@@ -55,15 +58,26 @@ def analyze_leaf_image(image_path):
     healthy_pct = float(healthy_mask.sum()) / plant_pixel_count * 100
     stressed_pct = float(stressed_mask.sum()) / plant_pixel_count * 100
 
-    if stressed_pct > 15:
-        verdict = "High stress detected"
-        confidence = round(min(96, 65 + stressed_pct / 3), 1)
-    elif stressed_pct > 0.5:
-        verdict = "Mild stress detected"
-        confidence = round(min(90, 55 + stressed_pct * 2), 1)
+    mean_r, mean_g, mean_b = float(r.mean()), float(g.mean()), float(b.mean())
+    texture_std = float(np.std(arr))
+
+    if disease_model is not None:
+        feature_cols = ["healthy_pct", "stressed_pct", "mean_r", "mean_g", "mean_b", "texture_std"]
+        features = pd.DataFrame(
+            [[healthy_pct, stressed_pct, mean_r, mean_g, mean_b, texture_std]],
+            columns=feature_cols,
+        )
+        label = disease_model.predict(features)[0]
+        proba = disease_model.predict_proba(features)[0]
+        confidence = round(float(max(proba)) * 100, 1)
+        verdict = {
+            "Healthy": "Healthy",
+            "Mild stress": "Mild stress detected",
+            "High stress": "High stress detected",
+        }.get(label, label)
     else:
-        verdict = "Healthy"
-        confidence = round(min(97, 70 + healthy_pct / 4), 1)
+        # Fallback if the model file is missing
+        verdict, confidence = "Unknown (model not loaded)", 0.0
 
     return {
         "verdict": verdict,
@@ -132,12 +146,16 @@ def yield_predictor():
         try:
             rainfall = float(request.form.get("rainfall"))
             temperature = float(request.form.get("temperature"))
-            soil_moisture = float(request.form.get("soil_moisture"))
             fertilizer = float(request.form.get("fertilizer"))
+            nitrogen = float(request.form.get("nitrogen"))
+            phosphorus = float(request.form.get("phosphorus"))
+            potassium = float(request.form.get("potassium"))
 
-            prediction = yield_model.predict(
-                [[rainfall, temperature, soil_moisture, fertilizer]]
-            )[0]
+            features = pd.DataFrame(
+                [[rainfall, temperature, fertilizer, nitrogen, phosphorus, potassium]],
+                columns=["rainfall", "temperature", "fertilizer", "nitrogen", "phosphorus", "potassium"],
+            )
+            prediction = yield_model.predict(features)[0]
             result = round(float(prediction), 1)
         except (TypeError, ValueError):
             result = None

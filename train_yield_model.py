@@ -1,63 +1,67 @@
 """
-Trains a real ML model to predict crop yield (in quintals/acre)
-from rainfall, temperature, soil moisture, and fertilizer use.
+Trains the crop yield model on a REAL dataset (109 real records) instead
+of the synthetic data used before.
 
-NOTE ON DATA: We don't have access to a real farm-sensor dataset,
-so this script generates a realistic SYNTHETIC dataset using a
-known agronomic relationship + random noise. The model itself is
-genuinely trained on this data with a real train/test split — the
-predictions are real outputs of a trained model, not hardcoded.
-Swap in a real CSV later by replacing the data-generation block.
+Source: Sukhman Singh's Crop Yield Prediction dataset
+(https://github.com/SUKHMAN-SINGH-1612/Data-Science-Projects), saved
+locally as data/crop_yield_real_data.xlsx.
+
+Columns: Rain Fall (mm), Fertilizer (kg), Temperature (C),
+Nitrogen (N), Phosphorus (P), Potassium (K) -> Yield (Q/acre)
+
+NOTE ON DATA SIZE: this is a small real dataset (109 rows, ~99 after
+cleaning). That's enough to train a genuine model and get an honest
+R² score, but not enough to expect production-grade accuracy or wide
+generalization. Treat this model as a real but modest baseline --
+more real records would meaningfully improve it.
+
+NOTE ON SCHEMA CHANGE: this real dataset has no soil-moisture column.
+Instead of faking soil moisture, we switched the model's inputs to
+match what the real data actually provides: rainfall, temperature,
+fertilizer, and N/P/K macronutrient levels. app.py and the
+yield-predictor form were updated to match.
 """
 
-import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_absolute_error
 import joblib
 
-np.random.seed(42)
-N = 2000
+df = pd.read_excel("data/crop_yield_real_data.xlsx")
 
-rainfall = np.random.uniform(300, 1500, N)          # mm per season
-temperature = np.random.uniform(15, 40, N)           # deg C average
-soil_moisture = np.random.uniform(10, 45, N)         # % volumetric
-fertilizer = np.random.uniform(0, 200, N)            # kg/acre
+df.columns = [
+    "rainfall", "fertilizer", "temperature",
+    "nitrogen", "phosphorus", "potassium", "yield_qtl",
+]
 
-# Realistic-ish relationship: yield rises with rainfall & moisture up to
-# a point, dips in extreme heat, and responds to fertilizer with
-# diminishing returns. Plus random noise so it isn't a perfect formula.
-yield_qtl = (
-    10
-    + 0.02 * rainfall
-    + 0.05 * soil_moisture
-    + 0.08 * fertilizer
-    - 0.00004 * fertilizer**2
-    - 0.15 * (temperature - 27) ** 2
-    + np.random.normal(0, 4, N)
-)
-yield_qtl = np.clip(yield_qtl, 2, None)
+# Clean: the raw sheet has ":" typos in temperature, and some blank cells
+df["temperature"] = df["temperature"].replace(":", pd.NA)
+for col in df.columns:
+    df[col] = pd.to_numeric(df[col], errors="coerce")
 
-df = pd.DataFrame({
-    "rainfall": rainfall,
-    "temperature": temperature,
-    "soil_moisture": soil_moisture,
-    "fertilizer": fertilizer,
-    "yield_qtl": yield_qtl
-})
+# Drop rows where the target itself is missing -- can't train on those
+df = df.dropna(subset=["yield_qtl"])
 
-X = df[["rainfall", "temperature", "soil_moisture", "fertilizer"]]
+# Fill missing feature values with the column median (documented, not hidden)
+for col in ["rainfall", "fertilizer", "temperature", "nitrogen", "phosphorus", "potassium"]:
+    df[col] = df[col].fillna(df[col].median())
+
+print(f"Training on {len(df)} real records after cleaning.")
+
+feature_cols = ["rainfall", "temperature", "fertilizer", "nitrogen", "phosphorus", "potassium"]
+X = df[feature_cols]
 y = df["yield_qtl"]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-model = RandomForestRegressor(n_estimators=200, max_depth=8, random_state=42)
+model = RandomForestRegressor(n_estimators=200, max_depth=6, random_state=42)
 model.fit(X_train, y_train)
 
 preds = model.predict(X_test)
 print(f"R² score on test data: {r2_score(y_test, preds):.3f}")
 print(f"Mean absolute error: {mean_absolute_error(y_test, preds):.2f} quintals/acre")
+print(f"(test set size: {len(y_test)} records -- small, so treat this score as indicative, not definitive)")
 
 joblib.dump(model, "yield_model.pkl")
 print("Saved trained model to yield_model.pkl")
