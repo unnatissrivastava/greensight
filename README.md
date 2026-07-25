@@ -18,27 +18,29 @@ GreenSight is a concept for a drone-based crop monitoring startup. This repo con
 
 ## 📁 Project Structure
 
+```text
 greensight/
-├── app.py # Flask app — all routes & backend logic
-├── train_yield_model.py # Script that trains the yield model
-├── yield_model.pkl # Trained yield prediction model
-├── disease_model.pkl # Trained disease classifier
-├── greensight.db # SQLite database (auto-created on first run)
-├── templates/ # All HTML pages (Jinja2 templates)
-│ ├── index.html # Home
-│ ├── features.html # Features (growth timeline)
-│ ├── about.html # About / mission / business model
-│ ├── contact.html # Contact form
-│ ├── thanks.html # Post-submission confirmation
-│ ├── admin.html # View contact form submissions
-│ ├── demo.html # Live demo dashboard (all tools, one page)
-│ ├── yield_predictor.html # Yield prediction tool
-│ ├── disease_detector.html # Disease detection tool
-│ └── ndvi_mapper.html # NDVI-style heatmap tool
-└── static/
-├── style.css # All styling (design tokens, layout, animation)
-├── script.js # Scroll reveals, nav toggle, live sensor sim
-└── uploads/ # User-uploaded images land here (auto-created)
+├── app.py                  # Flask app
+├── train_yield_model.py    # Train yield model
+├── yield_model.pkl
+├── disease_model.pkl
+├── greensight.db
+├── templates/
+│   ├── index.html
+│   ├── features.html
+│   ├── about.html
+│   ├── contact.html
+│   ├── thanks.html
+│   ├── admin.html
+│   ├── demo.html
+│   ├── yield_predictor.html
+│   ├── disease_detector.html
+│   └── ndvi_mapper.html
+├── static/
+│   ├── style.css
+│   └── script.js
+└── uploads/
+```
 
 
 ---
