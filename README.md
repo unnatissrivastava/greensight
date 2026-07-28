@@ -9,7 +9,7 @@ GreenSight is a concept for a drone-based crop monitoring startup. This repo con
 ## 🧱 Tech Stack
 
 -> **Backend:** Python, Flask
-- **Database:** SQLite (contact form submissions)
+-> **Database:** SQLite (contact form submissions)
 - **ML:** scikit-learn (RandomForest — regression + classification)
 - **Image processing:** Pillow, NumPy
 - **Frontend:** HTML, CSS, vanilla JavaScript (no framework)
