@@ -52,7 +52,7 @@ pip install flask scikit-learn pandas numpy pillow joblib
 python app.py
 ```
 
-Then open **http://127.0.0.1:5000** in a browser
+Then open **http://127.0.0.1:5000** in a browser.
 
 To retrain the yield model from scratch:
 ```bash
