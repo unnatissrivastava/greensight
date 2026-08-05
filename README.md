@@ -1,4 +1,4 @@
-# 🌿 GreenSight
+#  GreenSight
 
 **AI-powered precision agriculture platform  pitch site + working demo tools.**
 
