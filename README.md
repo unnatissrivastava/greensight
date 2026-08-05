@@ -1,6 +1,6 @@
 # 🌿 GreenSight
 
-*AI-powered precision agriculture platform  pitch site + working demo tools.**
+**AI-powered precision agriculture platform  pitch site + working demo tools.**
 
 GreenSight is a concept for a drone-based crop monitoring startup. This repo contains a full pitch website (Home, Features, About, Contact) plus a set of **working, functional tools**, a trained yield-prediction model, a trained disease classifier, and an NDVI-style field mapper, so the idea can actually be demoed, not just described.
 
